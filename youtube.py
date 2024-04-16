@@ -1,9 +1,11 @@
+#importing libraries
+
 from googleapiclient.discovery import build
 import pymongo
 import psycopg2
 import pandas as pd
 import streamlit as st
-
+import time
 
 #API key connection
 
@@ -478,15 +480,35 @@ def show_comments_table():
 # streamlit part
 
 with st.sidebar:
-    st.title(":red[YOUTUBE DATA HARVESTING AND WHEARHOUSING]")
-    st.header("Skill Take Away")
-    st.caption("Python scripting")
-    st.caption("Data collection")
-    st.caption("MongoDb")
-    st.caption("API Integration")
-    st.caption("Data management using SQL and MongoDB")
+    st.markdown("""
+        <h1 style='text-align: center; color: #FF3131; font-size: 2.5em; margin-bottom: 0.2em;'> 
+           CAPSTONE PROJECT-1
+        </h1>
+        
+        """, unsafe_allow_html=True)    
+    st.header("Technology Used :")
+    st.markdown("""
+            - **Implemented backend logic with Python.**
+            - **Developed using MongoDB and SQL for efficient data storage.**
+            - **Integrated YouTube API for seamless communication.**
+            - **Utilized Streamlit for web application development.**
+        """)
+    
+        # LinkedIn link with logo
+    st.header("Connect with Me")
+    linkedin_logo = "https://img.icons8.com/fluent/48/000000/linkedin.png"  
+    linkedin_url = "https://www.linkedin.com/in/rishiraj-a-192405195?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base_contact_details%3BnknKdX46Tk%2BjkoSovYqbsg%3D%3D"  
+    st.markdown(f"[![LinkedIn]({linkedin_logo})]({linkedin_url})")
+
+st.markdown("""
+        <h1 style='text-align: center; color: #FF3131; font-size: 2.5em; margin-bottom: 0.2em;'> 
+            YouTube Data Harvesting and Warehousing
+        </h1>
+        
+        """, unsafe_allow_html=True)    
 
 channel_id=st.text_input("Enter the channel ID")
+
 
 if st.button("Collect and Store data"):
         ch_ids=[]
@@ -496,10 +518,11 @@ if st.button("Collect and Store data"):
             ch_ids.append(ch_data["channel_information"]["Channel_Id"])
         
         if channel_id in ch_ids:
-             st.success("Channel of the given id already exists")
+             st.error("Channel of the given id already exists")
         else:
-             insert=channel_details(channel_id)  
-             st.success(insert)   
+             insert=channel_details(channel_id)
+             st.success(insert)
+             st.snow()   
 
 
 all_channels=[]
@@ -509,12 +532,13 @@ for ch_data in coll1.find({},{"_id":0,"channel_information":1}):
    all_channels.append(ch_data["channel_information"]['Channel_Name'])
 
 unique_channel=st.selectbox("Select the channel",all_channels)
-
 if st.button("Migrate to sql"):
     Table=tables(unique_channel)
     st.success(Table)
 
+    
 show_table=st.radio("SELECT THE TABLE FOR VIEW",("CHANNELS","PLAYLISTS","VIDEOS","COMMENTS"))
+
 
 if show_table=="CHANNELS":
     show_channels_table()
@@ -527,6 +551,7 @@ elif show_table=="VIDEOS":
 
 elif show_table=="COMMENTS":
     show_comments_table()
+    
 
 
 #sql connection
